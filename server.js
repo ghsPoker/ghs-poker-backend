@@ -18,10 +18,6 @@ app.use(
         })
     );
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-
 app.get('/log-in/', (req, res) => {
     //compare credentials to MongoDB
     res.send('MongoDB connection Port')
