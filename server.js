@@ -1,8 +1,8 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const cors = require('cors');
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 8080;
 const allowedOrigins = ['http://ghsPoker.github.io/']
 
 app.use(
