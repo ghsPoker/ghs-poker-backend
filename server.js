@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const {MongoClient} = require('mongodb')
+let db;
 require('dotenv').config();
 
 const app = express()
@@ -38,13 +39,22 @@ app.post('/user/log-in/', (req, res) => {
 app.post('/user/sign-up/', (req, res) => {
     console.log('POST request on path "/user/sign-up"');
     //some mongodb stuff
-    res.sendStatus(200)
+    const receivedData = req.body
+    if (!receivedData.username || !receivedData.password) res.status(400).json({"message": "Missing username or password", "data": receivedData})
+    
+    console.log("before async");
+    (async () => {
+        console.log("async");
+        const user = await db.findOne({"username": receivedData.username});
+    })();
+
+    console.log(user);
 })
 
 app.listen(port, async () => {
     try {
         await client.connect();
-        const db = client.db('ghsPoker').collection('userData')
+        db = client.db('ghsPoker').collection('userData')
     } catch (err) {
         console.log(err);
     };
