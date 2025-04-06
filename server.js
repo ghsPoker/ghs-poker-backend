@@ -40,30 +40,26 @@ app.post('/user/log-in/', (req, res) => {
 
 app.post('/user/sign-up/', (req, res) => {
     console.log('POST request on path "/user/sign-up"');
-    //some mongodb stuff
+
+    //Handling missing arguments or invalid arguments
     const receivedData = req.body
     if (!receivedData.username || !receivedData.password || receivedData.username.length < 3 || receivedData.password.length < 8) {
-        res.status(400).json({"message": "Invalid username or password", "data": receivedData});
+        res.status(400).json({"message": "Invalid username or password", "sendData": receivedData});
         console.log("Invalid username or password")
         return;
     }
 
-    let user;
+    // Handling username being already taken
     (async () => {
-        user = await db.findOne({"username": receivedData.username})
+        const user = await db.findOne({"username": receivedData.username})
         if (user) {
-            console.log(user)
-            console.log(receivedData.username)
-            res.status(400).json({"message": "Username already taken", "data": receivedData});
+            res.status(400).json({"message": "Username already taken", "sendData": receivedData});
             console.log("Username already taken")
             return;
         }
-    })();
 
-    
-    (async () => {
         await db.insertOne({"username": receivedData.username, "password": bcrypt.hashSync(receivedData.password)})
-        res.status(201).json({"message": "Successfully created account", "data": receivedData})
+        res.status(201).json({"message": "Successfully created account", "sendData": receivedData})
         console.log("Successfully created account")
     })();
 })
@@ -90,12 +86,3 @@ process.on('SIGTERM', async () => {
     await client.close();
     process.exit(0);
 });
-
-
-async function awaitFindOne(query) {
-    return await db.findOne(query)
-}
-
-async function awaitInsertOne(document) {
-    return await db.insertOne(document)
-}
