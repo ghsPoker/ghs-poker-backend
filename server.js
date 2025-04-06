@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express()
 const port = process.env.PORT || 8080;
-const allowedOrigins = ['http://ghsPoker.github.io/'];
+const allowedOrigins = ['https://ghspoker.github.io/'];
 
 const connectionString = process.env.MONGODB_CONNECTION_STRING;
 if (!connectionString) {
