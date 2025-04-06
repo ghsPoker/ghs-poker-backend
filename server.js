@@ -2,10 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const {MongoClient} = require('mongodb')
 const bcrypt = require('bcryptjs');
-const { hash } = require('bcryptjs');
-let db;
+require('bcryptjs');
 require('dotenv').config();
 
+let db;
 const app = express()
 const port = process.env.PORT || 8080;
 const allowedOrigins = ['http://ghsPoker.github.io/'];
@@ -16,6 +16,8 @@ if (!connectionString) {
     process.exit(0)
 }
 const client = new MongoClient(connectionString);
+
+app.use(express.json());
 
 app.use(
     cors({
@@ -30,12 +32,15 @@ app.use(
         })
     );
 
-app.use(express.json());
-
 app.post('/user/log-in/', (req, res) => {
     console.log('POST request on path "/user/log-in/"');
-    //some mongodb stuff
-    res.sendStatus(200)
+    
+    const receivedData = req.body;
+    
+    (async () => {
+        const user = await db.findOne({"username": receivedData.username});
+        return bcrypt.compareSync(receivedData.password, user.password)
+    })();
 })
 
 app.post('/user/sign-up/', (req, res) => {
