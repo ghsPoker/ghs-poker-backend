@@ -17,6 +17,7 @@ if (!connectionString) {
 }
 const client = new MongoClient(connectionString);
 
+/*
 app.options('*', cors({
     origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -27,6 +28,7 @@ app.options('*', cors({
     },
     credentials: true
 }));
+*/
 
 app.use(express.json());
 
@@ -82,10 +84,12 @@ app.post('/user/sign-up/', (req, res) => {
 
 app.listen(port, async () => {
     try {
+        console.log("trying MongoDB connection")
         await client.connect();
         db = client.db('ghsPoker').collection('userData')
     } catch (err) {
         console.log(err);
+        process.exit(1)
     };
 
     console.log(`App listening on port ${port}`);
