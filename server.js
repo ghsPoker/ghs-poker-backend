@@ -15,20 +15,10 @@ if (!connectionString) {
     console.log('No connection string provided')
     process.exit(0)
 }
-const client = new MongoClient(connectionString);
 
-/*
-app.options('*', cors({
-    origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-    } else {
-        callback(new Error('Not allowed by CORS'));
-    }
-    },
-    credentials: true
-}));
-*/
+client = new MongoClient(connectionString);
+
+app.options('*',cors())
 
 app.use(express.json());
 
@@ -84,7 +74,7 @@ app.post('/user/sign-up/', (req, res) => {
 
 app.listen(port, async () => {
     try {
-        console.log("trying MongoDB connection")
+        console.log("Trying MongoDB connection")
         await client.connect();
         db = client.db('ghsPoker').collection('userData')
     } catch (err) {
