@@ -73,13 +73,13 @@ app.post('/user/sign-up/', (req, res) => {
 
 app.listen(port, async () => {
     try {
+        console.log("Trying MongoDB connection")
         await client.connect();
         db = client.db('ghsPoker').collection('userData')
+        console.log(`App listening on port ${port}`);
     } catch (err) {
         console.log(err);
     };
-
-    console.log(`App listening on port ${port}`);
 });
 
 process.on('SIGINT', async () => {
