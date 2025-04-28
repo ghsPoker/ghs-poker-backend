@@ -41,7 +41,7 @@ app.post('/user/log-in/', (req, res) => {
     
     (async () => {
         const user = await db.findOne({"username": receivedData.username});
-        return bcrypt.compareSync(receivedData.password, user.password)
+        res.send(bcrypt.compareSync(receivedData.password, user.password))
     })();
 })
 
